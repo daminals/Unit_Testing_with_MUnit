@@ -1,3 +1,4 @@
+package intro_to_mips_testing;
 import org.junit.*;
 import org.junit.rules.Timeout;
 
@@ -12,7 +13,7 @@ import static edu.gvsu.mipsunit.munit.MARSSimulator.*;
 import org.junit.rules.Timeout;
 import java.util.concurrent.TimeUnit;
 
-public class a {
+public class fibtest {
 
   int sp = 0;
   int s0 = 0;
