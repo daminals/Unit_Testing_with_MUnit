@@ -15,6 +15,17 @@
   addi $sp, $sp, 4
 .end_macro
 
+.macro allocateHeapSpaceReg(%a)
+  # ALLOCATE HEAP SPACE
+  addi $sp, $sp, -4 
+  sw $a0, 0($sp)
+  li $v0, 9
+  move $a0, %a 
+  syscall
+  lw $a0, 0($sp)
+  addi $sp, $sp, 4
+.end_macro
+
 .macro getFibFrom(%address, %n)
   # preserve s registers
   addi $sp, $sp, -8
@@ -58,17 +69,25 @@
   addi $sp, $sp, 8
 .end_macro
 
+.globl instantiate_array
+instantiate_array:
+  # a0 = array size
+  allocateHeapSpaceReg($a0)
+  move $a1, $v0
+  # set elements 0, 1 in buffer as base case
+  li $t0,1
+  saveFibTo($a1,$0,$0)
+  saveFibTo($a1,$t0,$t0)
+  move $v0, $a1
+  jr $ra
+
 .globl fibonacci
 fibonacci:
-    # inputs: a0=n a1=buffer
+    # inputs: a0=n a1=array
     # check if buffer contains answer:
     getFibFrom($a1, $a0)
     bgtz $v1, end_fibonacci
 
-    # set elements 0, 1 in buffer as base case
-    li $t0,1
-    saveFibTo($a1,$0,$0)
-    saveFibTo($a1,$t0,$t0)
     addi $sp, $sp, -4
     sw $ra, 0($sp)
     jal fibonacci_helper # run fib function
@@ -79,7 +98,7 @@ fibonacci:
 
 .globl fibonacci_helper
 fibonacci_helper:
-    # inputs: a0=n a1=buffer
+    # inputs: a0=n a1=array
     # Check if n is 0 or 1
     li $t0, 1
     beqz $a0, return_0
@@ -96,7 +115,7 @@ fibonacci_helper:
     sw $t0, 0($sp) # marker to save result to buffer
 
     # Compute the (n-1)th and (n-2)th fibonacci numbers
-    addi $sp, $sp, -16    # allocate space on the stack
+    addi $sp, $sp, -16   # allocate space on the stack
     sw $ra, 4($sp)       # save return address
     sw $a0, 0($sp)       # save n
     addi $a0, $a0, -1    # n-1
@@ -136,14 +155,21 @@ fibonacci_helper:
 
 .globl test_fib_0
 test_fib_0:
-  # inputs: a0=n a1=buffer
-  li $a0, 14
-  addi $sp, $sp, -4
+  # inputs: a0=array_size
+  addi $sp, $sp, -8
   sw $ra, 0($sp)
+
+  jal instantiate_array
+  lw $ra, 0($sp)
+  move $a1, $v0
+  sw $v0, 4($sp)
+
+  li $a0, 14
   jal fibonacci
   lw $ra, 0($sp)
   li $a0, 21
   jal fibonacci
   lw $ra, 0($sp)
-  addi $sp, $sp, 4
+  lw $v1, 4($sp)
+  addi $sp, $sp, 8
   jr $ra

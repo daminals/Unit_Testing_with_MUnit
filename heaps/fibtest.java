@@ -67,34 +67,22 @@ public class fibtest {
 
   @Test
   public void test_zero() {
-    Label output_buffer = wordData(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0); 
-    run("fibonacci", 0,output_buffer);
+    run("instantiate_array", 20);
+    run("fibonacci", 0,get(v0));
     Assert.assertEquals(0, get(v0));
   }
 
   @Test
   public void test_one() {
-    Label output_buffer = wordData(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0); 
-    run("fibonacci", 1,output_buffer);
+    run("instantiate_array", 20);
+    run("fibonacci", 1,get(v0));
     Assert.assertEquals(1, get(v0));
   }
 
   @Test
-  public void fib_25() {
-    Label output_buffer = wordData(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0); 
-    for (int n=2; n<25; n++){
-      run("fibonacci", n, output_buffer); 
-      Assert.assertEquals("fibonacci failed at n=" + n, fibonacci_nums[n], get(v0));
-      // test buffer
-      for (Integer i=0; i<n; i++) Assert.assertEquals("failed at buffer_val=" + i.toString(), fibonacci_nums[i], getWord(getWord(output_buffer.address()+i*4)));
-    }
-  }
-
-  @Test
   public void test_fib_0() {
-    Label output_buffer = wordData(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0); 
-    run("test_fib_0", output_buffer); 
+    run("test_fib_0", 100); 
     Assert.assertEquals(fibonacci_nums[21], get(v0));
-    for (int n=0;n<21;n++) Assert.assertEquals("fibonacci failed at n="+n, fibonacci_nums[n], getWord(getWord(output_buffer.address()+n*4)));
+    for (int n=0;n<21;n++) Assert.assertEquals("fibonacci failed at n="+n, fibonacci_nums[n], getWord(getWord(get(v1)+n*4)));
   }
 }
