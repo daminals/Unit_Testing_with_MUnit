@@ -89,7 +89,6 @@ public class buffertest {
     for (int i=0; i<2; i++) System.out.print(getWord(output_buffer.address()+i*4) + " ");
     System.out.println();
     for (int i=0; i<solutions.length; i++) Assert.assertEquals(solutions[i],getWord(getWord(output_buffer.address()+i*4)));
-
   }
 
 }
